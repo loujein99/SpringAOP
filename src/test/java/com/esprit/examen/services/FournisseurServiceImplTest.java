@@ -20,7 +20,7 @@ public class FournisseurServiceImplTest {
 	 @Order(1)
 	 public void testSaveFournisseur(){
 	  CategorieFournisseur cat = CategorieFournisseur.ORDINAIRE;
-	  Fournisseur f= fournisseurService.addFournisseur(Fournisseur.builder().code("203JMT4945").libelle("Firaskh").categorieFournisseur(cat).build());
+	  Fournisseur f= fournisseurService.addFournisseur(Fournisseur.builder().code("181JMT1385").libelle("Looj").categorieFournisseur(cat).build());
 	  Assertions.assertNotNull(f);
 	    }
 	   @Test
@@ -28,15 +28,15 @@ public class FournisseurServiceImplTest {
 	   public void testRetrieveAllFournisseurs() {
 	     int listFournisseurs = fournisseurService.retrieveAllFournisseurs().size();
 	     CategorieFournisseur cat = CategorieFournisseur.ORDINAIRE;
-	     fournisseurService.addFournisseur(fournisseurService.addFournisseur(Fournisseur.builder().code("192JMT1717").libelle("Ahlem").categorieFournisseur(cat).build()));
+	     fournisseurService.addFournisseur(fournisseurService.addFournisseur(Fournisseur.builder().code("193JMT1340").libelle("Wess Sakri").categorieFournisseur(cat).build()));
 	     Assertions.assertEquals(listFournisseurs+1, fournisseurService.retrieveAllFournisseurs().size());
 	    }
 	   @Test
 	    @Order(3)
 	    public void testUpdateFournisseur() {
 	        CategorieFournisseur cat = CategorieFournisseur.ORDINAIRE;
-	        Fournisseur f= fournisseurService.addFournisseur(Fournisseur.builder().code("100JMT0912").libelle("Kahia").categorieFournisseur(cat).build());
-	        f.setLibelle("KahiaSabri");
-	        Assertions.assertEquals("KahiaSabri",fournisseurService.updateFournisseur(f).getLibelle());
+	        Fournisseur f= fournisseurService.addFournisseur(Fournisseur.builder().code("178JFT2165").libelle("Inkown").categorieFournisseur(cat).build());
+	        f.setLibelle("Sabri");
+	        Assertions.assertEquals("Sabri",fournisseurService.updateFournisseur(f).getLibelle());
 	   }
 }
