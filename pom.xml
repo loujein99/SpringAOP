@@ -8,9 +8,9 @@
 		<version>2.5.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.esprit.examen</groupId>
-	<artifactId>tpAchatProject</artifactId>
-	<version>1.0</version>
+	<groupId>com.esprit.examen</groupId><!-- ltestttt -->
+	<artifactId>tpAchatProject</artifactId><!-- lookup parent from repository -->
+	<version>1.0</version><!-- lookup parent from repository -->
 	<name>tpAchatProject</name>
 	<description>tpAchatProject</description>
 	<properties>
@@ -32,31 +32,12 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
-
-		<!-- Junit 5 -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-launcher</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-	
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-junit-jupiter</artifactId>
-			<scope>test</scope>
-		</dependency>
-	
+         
+<!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+ <dependency>
+  <groupId>org.mockito</groupId>
+   <artifactId>mockito-core</artifactId>
+    </dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -78,6 +59,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
+			<version>1.18.22</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -94,23 +76,52 @@
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 	</dependencies>
-	<distributionManagement>
-		<repository>
-		<id>deploymentRepo</id>
-		<name>Nexus Repository</name>
-		<url>http://192.168.1.56:8081/repository/maven-releases/</url>
-	</repository>
-</distributionManagement>
+
 	<build>
 		<plugins>
-			<plugin> 
-            <groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-resources-plugin</artifactId>
-			<version>3.1.0</version>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
+            <plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+        <plugin>
+        <groupId>org.sonatype.nexus</groupId>
+        <artifactId>nexus-plugin-bundle-maven-plugin</artifactId>
+        <extensions>true</extensions>
+      </plugin>
 		</plugins>
-		
 	</build>
-	
+<distributionManagement>
+    <repository>
+        <id>deploymentRepo</id>
+        <url>http://192.168.2.3:8081/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>
+        <id>deploymentRepo</id>
+        <url>http://192.168.2.3:8081/repository/maven-snapshots/</url>
+    </snapshotRepository>
+	</distributionManagement>
 
 </project>
