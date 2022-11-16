@@ -1,4 +1,3 @@
-FROM openjdk:11-jre-slim
-EXPOSE 8089
-ADD target/achat-1.0.jar achat-1.0.jar
-ENTRYPOINT ["java","-jar","/achat.jar"]
+FROM openjdk:11
+ADD target/tpAchatProject-1.0.jar tpachatproject.jar
+ENTRYPOINT ["java","-jar","/tpachatproject.jar"]
