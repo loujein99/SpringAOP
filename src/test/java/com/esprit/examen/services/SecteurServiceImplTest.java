@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -25,13 +24,13 @@ public class SecteurServiceImplTest {
 
     @Test
     @Order(1)
-    public void testSaveSecteur(){
+    public void testSaveSecateurs(){
         SecteurActivite s= secteurImpl.addSecteurActivite(SecteurActivite.builder().codeSecteurActivite("22b").libelleSecteurActivite("secteur test").build());
         Assertions.assertNotNull(s);
     }
 
 
-   /* @Test
+    /*@Test
     @Order(2)
 	public void testUpdateSecteur() {
     	  SecteurActivite s= secteurImpl.addSecteurActivite(SecteurActivite.builder().codeSecteurActivite("22bcc").libelleSecteurActivite("secteur test").build());
