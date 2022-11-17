@@ -1,122 +1,86 @@
 package com.esprit.examen.services;
-
-import com.esprit.examen.entities.CategorieProduit;
-import com.esprit.examen.repositories.CategorieProduitRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.annotation.Rollback;
-
-import java.util.ArrayList;
+import com.esprit.examen.entities.Produit;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-        import static org.junit.Assert.assertEquals;
-        import static org.mockito.BDDMockito.given;
-        import static org.mockito.Mockito.*;
-@RunWith(MockitoJUnitRunner.class)
+import static org.junit.Assert.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.Test;
+import org.junit.jupiter.api.Order;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ProduitServiceImplTest {
+    @Autowired
+    IProduitService produitService;
+    private static final Logger l = LogManager.getLogger(ProduitServiceImpl.class);
 
 
-
-
-
-    @Mock
-    private CategorieProduitRepository categorieProduitRepository;
-
-    @InjectMocks
-    private CategorieProduitServiceImpl categorieProduitService;
 
     @Test
-    @Rollback(value = false)
-    public void whenSavecat_shouldReturnProduct(){
-        CategorieProduit categorieProduit = new CategorieProduit();
-        categorieProduit.setCodeCategorie("Test Code");
-        when(categorieProduitRepository.save(ArgumentMatchers.any(CategorieProduit.class))).thenReturn(categorieProduit);
-        CategorieProduit created = categorieProduitService.addCategorieProduit(categorieProduit);
-        assertThat(created.getCodeCategorie()).isSameAs(categorieProduit.getCodeCategorie());
-        verify(categorieProduitRepository).save(categorieProduit);
+    public void testAddProduit() throws ParseException {
+        List<Produit> Produits = produitService.retrieveAllProduits();
+        Produit prod = new Produit();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date1 = dateFormat.parse("10/02/2020");
+        Date date2 = dateFormat.parse("12/09/2022");
+        prod.setCodeProduit("f-455112");
+        prod.setLibelleProduit("Tele");
+        prod.setDateCreation(date1);
+        prod.setDateDerniereModification(date2);
+        produitService.addProduit(prod);
+        Produit savedProduit = produitService.addProduit(prod);
+        l.info("Produit added : " + prod.getLibelleProduit());
+        l.info("size produit : : " + Produits.size());
+        assertNotNull(produitService.retrieveProduit(savedProduit.getIdProduit()));
     }
     @Test
-    @Rollback(value = false)
-    public void shouldReturnAllProducts(){
-        List<CategorieProduit> categorieProduitList = new ArrayList<>();
-        categorieProduitList.add( new CategorieProduit());
-        given(categorieProduitRepository.findAll()).willReturn(categorieProduitList);
-        List<CategorieProduit> expected = categorieProduitService.retrieveAllCategorieProduits();
-        assertEquals(expected, categorieProduitList);
-        verify(categorieProduitRepository).findAll();
+    public void testRetrieveAllProduit() throws ParseException {
+        try{
+            List<Produit> Produits = produitService.retrieveAllProduits();
+            //int expected = Produits.size();
+            l.info("Produitssssssss " + Produits);
+            l.info("Produit " +Produits.size());
+            if(Produits.size()>0) {
+                assertEquals(2, Produits.size());
+                System.out.println("there is more then 0 Product");
+                l.info("Produit " +Produits.size());
+            }else{
+                System.out.println("**************0 Product**************");
+            }}catch (Exception e){
+            l.info(e);
+        }
+    }
+
+    @Test
+    public void testDeleteProduit()  {
+        try{
+            List<Produit> Produits = produitService.retrieveAllProduits();
+            Produit Prod =Produits.get(0);
+            produitService.deleteProduit(Prod.getIdProduit());
+        }catch (Exception e){
+            l.info(e);}
     }
     @Test
-    @Rollback(value = false)
-    public void whenGivenId_shouldDeleteProduct_ifFound(){
-        CategorieProduit categorieProduit = new CategorieProduit();
-        categorieProduit.setIdCategorieProduit(1L);
-        categorieProduit.setLibelleCategorie("Test Libelle");
-        categorieProduit.setCodeCategorie("Test Code");
-
-        when(categorieProduitRepository.findById(categorieProduit.getIdCategorieProduit())).thenReturn(Optional.of(categorieProduit));
-
-        categorieProduitService.deleteCategorieProduit(categorieProduit.getIdCategorieProduit());
-        verify(categorieProduitRepository).deleteById(categorieProduit.getIdCategorieProduit());
+    public void TestGetProduit(){
+        try {
+            Produit sa = new Produit();
+            sa.setCodeProduit("f-5155");
+            sa.setLibelleProduit("Telephone");
+            // Produit savedProduit= produitService.addProduit(sa);
+            Produit prod = produitService.retrieveProduit(sa.getIdProduit());
+            l.info("****************Produit : " + prod.getLibelleProduit());
+            System.out.println("****************Produit : "  + prod.getLibelleProduit());
+            assertNotNull(produitService.retrieveProduit(sa.getIdProduit()));
+        }catch (Exception e){
+            l.info(e.getMessage());
+        }
     }
-    @Test(expected = RuntimeException.class)
-    public void should_throw_exception_when_product_doesnt_exist(){
-        CategorieProduit categorieProduit = new CategorieProduit();
-        categorieProduit.setIdCategorieProduit(89L);
-        categorieProduit.setLibelleCategorie("Test Libelle");
-        categorieProduit.setCodeCategorie("Test Code");
-
-        given(categorieProduitRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
-        categorieProduitService.deleteCategorieProduit(categorieProduit.getIdCategorieProduit());
-    }
-    @Test
-    public void whenGivenId_shouldUpdateProduct_ifFound() {
-        CategorieProduit categorieProduit = new CategorieProduit();
-        categorieProduit.setIdCategorieProduit(89L);
-        categorieProduit.setLibelleCategorie("Test Libelle");
-        categorieProduit.setCodeCategorie("Test Code");
-
-        CategorieProduit newCategorieProduit = new CategorieProduit();
-        categorieProduit.setLibelleCategorie("New Test Libelle");
-
-        categorieProduitService.updateCategorieProduit(newCategorieProduit);
-        verify(categorieProduitRepository).save(newCategorieProduit);
-    }
-    @Test
-    public void whenGivenId_shouldReturnProduct_ifFound() {
-        CategorieProduit categorieProduit = new CategorieProduit();
-        categorieProduit.setIdCategorieProduit(89L);
-        categorieProduit.setLibelleCategorie("Test Libelle");
-        categorieProduit.setCodeCategorie("Test Code");
-
-        when(categorieProduitRepository.findById(categorieProduit.getIdCategorieProduit())).thenReturn(Optional.of(categorieProduit));
-
-        CategorieProduit expected = categorieProduitService.retrieveCategorieProduit(categorieProduit.getIdCategorieProduit());
-
-        assertThat(expected).isSameAs(categorieProduit);
-        verify(categorieProduitRepository).findById(categorieProduit.getIdCategorieProduit());
-    }
-    @Test(expected = RuntimeException.class)
-    public void should_throw_exception_when_Product_doesnt_exist() {
-        CategorieProduit categorieProduit = new CategorieProduit();
-        categorieProduit.setIdCategorieProduit(89L);
-        categorieProduit.setLibelleCategorie("Test Libelle");
-        categorieProduit.setCodeCategorie("Test Code");
-
-        given(categorieProduitRepository.findById(anyLong())).willReturn(Optional.ofNullable(null));
-        categorieProduitService.retrieveCategorieProduit(categorieProduit.getIdCategorieProduit());
-    }
-
-
-
-
-
-
 
 
 }
